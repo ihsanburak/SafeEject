@@ -1,0 +1,36 @@
+name: Build SafeEject
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Publish Windows x64 executable
+        run: >
+          dotnet publish src/SafeEject.Launcher/SafeEject.Launcher.csproj
+          -c Release
+          -r win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:EnableCompressionInSingleFile=true
+          -o dist
+
+      - name: Upload executable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SafeEject-win-x64
+          path: dist/SafeEject.exe

@@ -1,0 +1,6 @@
+*.lnk
+dist/
+bin/
+obj/
+src/**/bin/
+src/**/obj/
